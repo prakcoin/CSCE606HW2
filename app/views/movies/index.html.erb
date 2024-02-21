@@ -5,9 +5,9 @@
 <table id="moviesTable">
   <thead>
     <tr>
-      <th><a href="#" onclick="sortTable('title')">Title</a></th>
-      <th><a href="#" onclick="sortTable('rating')">Rating</a></th>
-      <th><a href="#" onclick="sortTable('release_date')">Release Date</a></th>
+      <th>Title</th>
+      <th>Rating</th>
+      <th>Release Date</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -26,44 +26,26 @@
 <%= link_to "New movie", new_movie_path %>
 
 <script>
-  function sortTable(column) {
-    var table = document.getElementById("moviesTable");
-    var sortOrder = "asc";
-    if (table.getAttribute("data-sort-column") === column && table.getAttribute("data-sort-order") === "asc") {
-      sortOrder = "desc";
-    }
-
-    table.setAttribute("data-sort-column", column);
-    table.setAttribute("data-sort-order", sortOrder);
-    
-    var switching = true;
-    while (switching) {
-      switching = false;
-      var shouldSwitch = false;
-      var rows = table.rows;
-      var i = 0;
-      for (i = 1; i < (rows.length - 1); i++) {
-        var x = rows[i].getElementsByTagName("TD")[column].innerHTML.toLowerCase();
-        var y = rows[i + 1].getElementsByTagName("TD")[column].innerHTML.toLowerCase();
-        
-        if ((sortOrder === "asc" && x > y) || (sortOrder === "desc" && x < y)) {
-          shouldSwitch = true;
-          break;
-        }
-      }
-      if (shouldSwitch) {
-        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-        switching = true;
-      }
-    }
+  function compareValues(a, b) {
+    return (a<b) ? -1 : (a>b) ? 1 : 0;
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
-    var table = document.getElementById("moviesTable");
-    var sortColumn = table.getAttribute("data-sort-column");
-    var sortOrder = table.getAttribute("data-sort-order");
-    if (sortColumn && sortOrder) {
-      sortTable(sortColumn);
-    }
+  function sortTable(colnum) {
+    let rows = Array.from(table.querySelectorAll(`tr`));
+    rows = rows.slice(1);
+
+    let qs = `td:nth-child(${colnum})`;
+
+    rows.sort((r1,r2) => {
+      let t1 = r1.querySelector(qs);
+      let t2 = r2.querySelector(qs);
+      return compareValues(t1.textContent,t2.textContent);
+    });
+
+    rows.forEach(row => table.appendChild(row));
+  }
+
+  table.querySelectorAll(`th`).forEach((th, position) => {
+    th.addEventListener(`click`, evt => sortTable(position));
   });
 </script>
