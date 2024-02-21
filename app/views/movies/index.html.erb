@@ -5,18 +5,9 @@
 <table id="moviesTable">
   <thead>
     <tr>
-      <th class="<%= 'sorted-asc' if params[:sort_by] == 'title' && params[:direction] == 'asc' %>
-          <%= 'sorted-desc' if params[:sort_by] == 'title' && params[:direction] == 'desc' %>">
-        <%= link_to "Title", { sort_by: 'title', direction: (params[:sort_by] == 'title' && params[:direction] == 'asc') ? 'desc' : 'asc' } %>
-      </th>
-      <th class="<%= 'sorted-asc' if params[:sort_by] == 'rating' && params[:direction] == 'asc' %>
-          <%= 'sorted-desc' if params[:sort_by] == 'rating' && params[:direction] == 'desc' %>">
-        <%= link_to "Rating", { sort_by: 'rating', direction: (params[:sort_by] == 'rating' && params[:direction] == 'asc') ? 'desc' : 'asc' } %>
-      </th>
-      <th class="<%= 'sorted-asc' if params[:sort_by] == 'release_date' && params[:direction] == 'asc' %>
-          <%= 'sorted-desc' if params[:sort_by] == 'release_date' && params[:direction] == 'desc' %>">
-        <%= link_to "Release Date", { sort_by: 'release_date', direction: (params[:sort_by] == 'release_date' && params[:direction] == 'asc') ? 'desc' : 'asc' } %>
-      </th>
+      <th>Title</th>
+      <th>Rating</th>
+      <th>Release Date</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -58,6 +49,7 @@
 
   th {
     background-color: #f2f2f2;
+    cursor: pointer;
   }
 
   tr:nth-child(even) {
@@ -71,8 +63,10 @@
 
 <script>
   var table = document.getElementById("moviesTable");
+  var sortDirections = {}; // Object to store sorting direction for each column
+
   function compareValues(a, b) {
-    return (a < b) ? -1 : (a > b) ? 1 : 0;
+    return a.localeCompare(b); // Using localeCompare for string comparison
   }
 
   function sortTable(colnum) {
@@ -82,15 +76,18 @@
     let qs = `td:nth-child(${colnum})`;
 
     rows.sort((r1, r2) => {
-      let t1 = r1.querySelector(qs);
-      let t2 = r2.querySelector(qs);
-      return compareValues(t1.textContent, t2.textContent);
+      let t1 = r1.querySelector(qs).textContent.trim();
+      let t2 = r2.querySelector(qs).textContent.trim();
+      return compareValues(t1, t2) * (sortDirections[colnum] === 'asc' ? 1 : -1);
     });
 
     rows.forEach(row => table.appendChild(row));
+    sortDirections[colnum] = sortDirections[colnum] === 'asc' ? 'desc' : 'asc'; // Toggle sorting direction
   }
 
   table.querySelectorAll(`th`).forEach((th, position) => {
+    sortDirections[position + 1] = 'asc'; // Initialize sorting direction for each column
     th.addEventListener(`click`, evt => sortTable(position + 1));
   });
 </script>
+
