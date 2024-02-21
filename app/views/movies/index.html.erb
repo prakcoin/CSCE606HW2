@@ -26,12 +26,12 @@
 <%= link_to "New movie", new_movie_path %>
 
 <script>
+  var table = document.getElementById("moviesTable");
   function compareValues(a, b) {
     return (a<b) ? -1 : (a>b) ? 1 : 0;
   }
 
   function sortTable(colnum) {
-    table = document.getElementById("moviesTable");
     let rows = Array.from(table.querySelectorAll(`tr`));
     rows = rows.slice(1);
 
