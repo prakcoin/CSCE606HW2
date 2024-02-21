@@ -2,12 +2,12 @@
 
 <h1>Movies</h1>
 
-<table>
+<table id="moviesTable">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Rating</th>
-      <th>Release Date</th>
+      <th><a href="#" onclick="sortTable('title')">Title</a></th>
+      <th><a href="#" onclick="sortTable('rating')">Rating</a></th>
+      <th><a href="#" onclick="sortTable('release_date')">Release Date</a></th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -24,3 +24,45 @@
 </table>
 
 <%= link_to "New movie", new_movie_path %>
+
+<script>
+  function sortTable(column) {
+    var table = document.getElementById("moviesTable");
+    var sortOrder = "asc";
+    if (table.getAttribute("data-sort-column") === column && table.getAttribute("data-sort-order") === "asc") {
+      sortOrder = "desc";
+    }
+
+    table.setAttribute("data-sort-column", column);
+    table.setAttribute("data-sort-order", sortOrder);
+    
+    var switching = true;
+    while (switching) {
+      switching = false;
+      var rows = table.rows;
+      for (let i = 1; i < (rows.length - 1); i++) {
+        var shouldSwitch = false;
+        var x = rows[i].getElementsByTagName("TD")[column].innerHTML.toLowerCase();
+        var y = rows[i + 1].getElementsByTagName("TD")[column].innerHTML.toLowerCase();
+        
+        if (sortOrder === "asc" ? (x > y) : (x < y)) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+      }
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var table = document.getElementById("moviesTable");
+    var sortColumn = table.getAttribute("data-sort-column");
+    var sortOrder = table.getAttribute("data-sort-order");
+    if (sortColumn && sortOrder) {
+      sortTable(sortColumn);
+    }
+  });
+</script>
