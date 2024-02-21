@@ -5,9 +5,18 @@
 <table id="moviesTable">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Rating</th>
-      <th>Release Date</th>
+      <th class="<%= 'sorted-asc' if params[:sort_by] == 'title' && params[:direction] == 'asc' %>
+          <%= 'sorted-desc' if params[:sort_by] == 'title' && params[:direction] == 'desc' %>">
+        <%= link_to "Title", { sort_by: 'title', direction: (params[:sort_by] == 'title' && params[:direction] == 'asc') ? 'desc' : 'asc' } %>
+      </th>
+      <th class="<%= 'sorted-asc' if params[:sort_by] == 'rating' && params[:direction] == 'asc' %>
+          <%= 'sorted-desc' if params[:sort_by] == 'rating' && params[:direction] == 'desc' %>">
+        <%= link_to "Rating", { sort_by: 'rating', direction: (params[:sort_by] == 'rating' && params[:direction] == 'asc') ? 'desc' : 'asc' } %>
+      </th>
+      <th class="<%= 'sorted-asc' if params[:sort_by] == 'release_date' && params[:direction] == 'asc' %>
+          <%= 'sorted-desc' if params[:sort_by] == 'release_date' && params[:direction] == 'desc' %>">
+        <%= link_to "Release Date", { sort_by: 'release_date', direction: (params[:sort_by] == 'release_date' && params[:direction] == 'asc') ? 'desc' : 'asc' } %>
+      </th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -25,10 +34,45 @@
 
 <%= link_to "New movie", new_movie_path %>
 
+<style>
+  /* Define styles for sorting indicators */
+  .sorted-asc::after {
+    content: " ▲";
+  }
+
+  .sorted-desc::after {
+    content: " ▼";
+  }
+
+  /* Add additional styling elements */
+  #moviesTable {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  tr:hover {
+    background-color: #ddd;
+  }
+</style>
+
 <script>
   var table = document.getElementById("moviesTable");
   function compareValues(a, b) {
-    return (a<b) ? -1 : (a>b) ? 1 : 0;
+    return (a < b) ? -1 : (a > b) ? 1 : 0;
   }
 
   function sortTable(colnum) {
@@ -37,16 +81,16 @@
 
     let qs = `td:nth-child(${colnum})`;
 
-    rows.sort((r1,r2) => {
+    rows.sort((r1, r2) => {
       let t1 = r1.querySelector(qs);
       let t2 = r2.querySelector(qs);
-      return compareValues(t1.textContent,t2.textContent);
+      return compareValues(t1.textContent, t2.textContent);
     });
 
     rows.forEach(row => table.appendChild(row));
   }
 
   table.querySelectorAll(`th`).forEach((th, position) => {
-    th.addEventListener(`click`, evt => sortTable(position));
+    th.addEventListener(`click`, evt => sortTable(position + 1));
   });
 </script>
