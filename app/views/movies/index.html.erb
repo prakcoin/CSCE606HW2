@@ -1,13 +1,13 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Movies</h1>
+<h1 style="text-align: center; font-family: Arial, sans-serif; font-weight: bold;">Movies</h1>
 
 <table id="moviesTable">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Rating</th>
-      <th>Release Date</th>
+      <th class="sortable-header" data-colnum="1">Title</th>
+      <th class="sortable-header" data-colnum="2">Rating</th>
+      <th class="sortable-header" data-colnum="3">Release Date</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -26,7 +26,6 @@
 <%= link_to "New movie", new_movie_path %>
 
 <style>
-  /* Define styles for sorting indicators */
   .sorted-asc::after {
     content: " ▲";
   }
@@ -47,6 +46,11 @@
     padding: 8px;
   }
 
+  body {
+    font-family: Arial, sans-serif;
+    background-color: beige;
+  }
+
   th {
     background-color: #f2f2f2;
     cursor: pointer;
@@ -58,6 +62,11 @@
 
   tr:hover {
     background-color: #ddd;
+  }
+  
+  /* Highlight sorted column */
+  .sorted-column {
+    background-color: #e6e6e6;
   }
 </style>
 
@@ -83,11 +92,18 @@
 
     rows.forEach(row => table.appendChild(row));
     sortDirections[colnum] = sortDirections[colnum] === 'asc' ? 'desc' : 'asc'; // Toggle sorting direction
+
+    table.querySelectorAll('th.sortable-header').forEach(th => {
+      th.classList.remove('sorted-asc', 'sorted-desc', 'sorted-column');
+    });
+    
+    var clickedHeader = table.querySelector(`th[data-colnum="${colnum}"]`);
+    clickedHeader.classList.add(sortDirections[colnum] === 'asc' ? 'sorted-asc' : 'sorted-desc');
+    clickedHeader.classList.add('sorted-column'); // Highlight sorted column
   }
 
-  table.querySelectorAll(`th`).forEach((th, position) => {
+  table.querySelectorAll(`th.sortable-header`).forEach((th, position) => {
     sortDirections[position + 1] = 'asc'; // Initialize sorting direction for each column
-    th.addEventListener(`click`, evt => sortTable(position + 1));
+    th.addEventListener(`click`, evt => sortTable(parseInt(th.getAttribute('data-colnum'))));
   });
 </script>
-

@@ -1,5 +1,7 @@
 <p style="color: green"><%= notice %></p>
 
+<h1 style="text-align: center; font-family: Arial, sans-serif; font-weight: bold;">Movie Details</h1>
+
 <%= render @movie %>
 
 <div>
@@ -8,3 +10,20 @@
 
   <%= button_to "Destroy this movie", @movie, method: :delete %>
 </div>
+
+<style>
+  .movie-details {
+    margin-bottom: 20px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: beige;
+  }
+
+  .movie-action {
+    color: #007bff;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+</style>

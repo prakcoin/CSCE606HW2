@@ -1,4 +1,4 @@
-<h1>Editing movie</h1>
+<h1 style="text-align: center; font-family: Arial, sans-serif; font-weight: bold;">Editing Movie</h1>
 
 <%= render "form", movie: @movie %>
 
@@ -8,3 +8,25 @@
   <%= link_to "Show this movie", @movie %> |
   <%= link_to "Back to movies", movies_path %>
 </div>
+
+<style>
+  .edit-title {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: beige;
+  }
+
+  .edit-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+</style>
